@@ -4,6 +4,8 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// 2. Call `extendTheme` and pass your custom values
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
