@@ -1,0 +1,48 @@
+/*
+ --primary-100: #1d888a;
+  --primary-200: #197476;
+  --primary-300: #27666b;
+  --primary-400: #1b4647;
+  --primary-500: #173838;
+
+*/
+
+.global-container {
+  height: 100vh;
+  width: 100vw;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  width: 100%;
+  height: max-content;
+  justify-content: space-between;
+  align-items: center;
+  .logo {
+    height: 2.5rem;
+    img {
+      height: 100%;
+    }
+  }
+  button {
+    background-color: #eaffff;
+    border: 2px solid #5eb3b8;
+    transition: 150ms ease-in-out;
+    color: #181818;
+    &:hover {
+      background-color: #5eb3b8;
+    }
+  }
+}
+
+.main-part {
+  flex: 1;
+  padding: 1rem 0;
+  width: 100%;
+  .main-part-inner {
+    height: 100%;
+    width: 100%;
+  }
+}
