@@ -1,4 +1,4 @@
-export const PageTitle = ({ children, inverted, props }) => {
+export const PageTitle = ({ children, inverted = false, props }) => {
   return (
     <h1
       className={`text-2xl text-${
@@ -10,7 +10,7 @@ export const PageTitle = ({ children, inverted, props }) => {
   );
 };
 
-export const PageSubTitle = ({ children, inverted, props }) => {
+export const PageSubTitle = ({ children, inverted = false, props }) => {
   return (
     <h2 className={`text-5xl text-${inverted ? "textInverted" : "text"}-300`}>
       {children}
@@ -18,7 +18,7 @@ export const PageSubTitle = ({ children, inverted, props }) => {
   );
 };
 
-export const Heading = ({ children, inverted, props }) => {
+export const Heading = ({ children, inverted = false, props }) => {
   return (
     <h3
       className={`text-sm text-${
@@ -30,7 +30,7 @@ export const Heading = ({ children, inverted, props }) => {
   );
 };
 
-export const Subheading = ({ children, inverted, props }) => {
+export const Subheading = ({ children, inverted = false, props }) => {
   return (
     <h4
       className={`text-xs text-${
@@ -42,19 +42,19 @@ export const Subheading = ({ children, inverted, props }) => {
   );
 };
 
-export const Title = ({ children, inverted, props }) => {
+export const Title = ({ children, inverted = false, props }) => {
   return (
-    <title
+    <h3
       className={`text-base text-${
         inverted ? "textInverted" : "text"
       }-300 font-medium`}
     >
       {children}
-    </title>
+    </h3>
   );
 };
 
-export const Body = ({ children, inverted, props }) => {
+export const Body = ({ children, inverted = false, props }) => {
   return (
     <p className={`text-base text-${inverted ? "textInverted" : "text"}-300`}>
       {children}
@@ -62,7 +62,7 @@ export const Body = ({ children, inverted, props }) => {
   );
 };
 
-export const Caption = ({ children, inverted, props }) => {
+export const Caption = ({ children, inverted = false, props }) => {
   return (
     <caption
       className={`text-xs text-${inverted ? "textInverted" : "text"}-300`}
