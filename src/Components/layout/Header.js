@@ -1,5 +1,5 @@
 import React from "react";
-import { Title } from "..";
+import { PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
 import person from "../../assets/images/mayuko.jpeg";
 const StockHeader = ({ ...props }) => {
@@ -10,11 +10,7 @@ const StockHeader = ({ ...props }) => {
         <div className="mx-1" />
         <Title>DOTQUIZ</Title>
       </div>
-      <img
-        src={person}
-        alt="user"
-        className="h-14 w-14 rounded-full ring-2 ring-primary-300"
-      />
+      <PrimaryButton title="Créer un quiz" />
     </header>
   );
 };

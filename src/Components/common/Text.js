@@ -43,6 +43,9 @@ export const Subheading = ({ children, inverted = false, props }) => {
 };
 
 export const Title = ({ children, inverted = false, props }) => {
+  // console.log(
+  //   `text-base text-${inverted ? "textInverted" : "text"}-300 font-medium`
+  // );
   return (
     <h3
       className={`text-base text-${
