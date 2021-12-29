@@ -1,7 +1,6 @@
-const { colors: defaultColors } = require("tailwindcss/defaultTheme");
 const colors = {
-  ...defaultColors,
   ...{
+    current: "currentColor",
     primary: {
       100: "#61E5C6",
       200: "#2CDDB4",
@@ -34,11 +33,11 @@ const colors = {
 };
 
 module.exports = {
-  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
-    extend: {},
-    colors,
+    extend: {
+      colors,
+    },
   },
   variants: {
     extend: {},
