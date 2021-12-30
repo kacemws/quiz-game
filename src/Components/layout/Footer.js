@@ -1,6 +1,6 @@
 import React from "react";
 import { Title, Caption } from "..";
-import logo from "../../assets/images/logo-inverted.svg";
+import logo from "../../assets/images/logo.svg";
 import fb from "../../assets/images/icons/fb.svg";
 import instagram from "../../assets/images/icons/instagram.svg";
 import twitter from "../../assets/images/icons/twitter.svg";
@@ -32,23 +32,25 @@ const socials = [
 
 const StockFooter = ({ ...props }) => {
   return (
-    <footer className="h-40 min-h-[10rem] w-100 bg-primary-300 px-4 flex flex-col justify-center">
-      <div className="flex items-center">
-        <img src={logo} alt="app's logo" className="h-10 w-10" />
-        <div className="mx-1" />
-        <Title inverted>DOTQUIZ</Title>
-      </div>
-      <hr className="my-2" />
-      <div className="w-100 h-14 flex items-center justify-between">
-        <Caption inverted>© 2021 DOTQUIZ. All rights reserved</Caption>
-        <div className="flex items-center h-full">
+    <footer className="h-40 min-h-[10rem] w-100 bg-gray-50 px-4 flex flex-col justify-center border-y-2 border-gray-200">
+      <div className="flex flex-col justify-evenly md:flex-row md:justify-between items-center h-24 ">
+        <div className="flex items-center">
+          <img
+            src={logo}
+            alt="app's logo"
+            className="h-8 w-8 md:h-10 md:w-10"
+          />
+          <div className="mx-1" />
+          <Title>DOTQUIZ</Title>
+        </div>
+        <div className="flex items-center">
           {socials.map(({ icon, link }, index) => {
             return (
               <a key={index} href={link} target="_blank" rel="noreferrer">
                 <img
                   src={icon}
                   alt="social"
-                  className={`cursor-pointer h-6 w-6 mx-2 ${
+                  className={`cursor-pointer h-4 w-4 md:h-6 md:w-6 mx-2 ${
                     index === 0 ? "ml-0" : ""
                   } ${index === socials.length - 1 ? "mr-0" : ""}`}
                 />
@@ -56,6 +58,10 @@ const StockFooter = ({ ...props }) => {
             );
           })}
         </div>
+      </div>
+      <hr className="my-1 bg-black border-gray-300 h-[1px]" />
+      <div className="w-100 h-12 flex items-center justify-center">
+        <Caption>© 2021 DOTQUIZ. All rights reserved</Caption>
       </div>
     </footer>
   );
