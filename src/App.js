@@ -1,6 +1,5 @@
 import { Layout, Home } from "./pages";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "antd/dist/antd.css";
 function App() {
   return (
     <Layout>
