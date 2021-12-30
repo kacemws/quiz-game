@@ -32,7 +32,7 @@ const socials = [
 
 const StockFooter = ({ ...props }) => {
   return (
-    <footer className="h-40 w-100 bg-primary-300 px-4 flex flex-col justify-center">
+    <footer className="h-40 min-h-[10rem] w-100 bg-primary-300 px-4 flex flex-col justify-center">
       <div className="flex items-center">
         <img src={logo} alt="app's logo" className="h-10 w-10" />
         <div className="mx-1" />
