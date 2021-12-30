@@ -1,7 +1,6 @@
 import React from "react";
 import { PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
-import person from "../../assets/images/mayuko.jpeg";
 const StockHeader = ({ ...props }) => {
   return (
     <header className="w-100 h-20 px-4 flex items-center justify-between">
