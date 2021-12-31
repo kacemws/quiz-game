@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
 const StockHeader = ({ ...props }) => {
-  const position = "sticky top-0";
+  const position = "sticky top-0 z-50";
   const size = "w-100 h-20 min-h-[5rem] px-4";
   const items = "flex items-center justify-between";
   const bg = "bg-neutral-200";
