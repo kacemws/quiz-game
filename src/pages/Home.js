@@ -10,7 +10,7 @@ import bottom from "../assets/images/shapes/bottom.svg";
 export const Home = ({ ...props }) => {
   return (
     <div className="min-h-full w-full">
-      <section className="flex justify-between items-center my-4">
+      <section className="flex flex-col md:flex-row justify-between items-center my-4">
         <img src={topStripe} className="absolute -right-0" alt="stripe" />
         <HomeDescription
           title="Les quizs n'ont jamais était si fun !"
@@ -20,7 +20,7 @@ export const Home = ({ ...props }) => {
         <HomeImage img={ready} title="Les quizs n'ont jamais était si fun !" />
       </section>
       {/* ********* */}
-      <section className="flex justify-between items-center my-12">
+      <section className="flex flex-col md:flex-row justify-between items-center my-12">
         <img src={bottomStripes} className="absolute left-0" alt="stripe" />
         <img src={circle} className="absolute right-0" alt="stripe" />
         <HomeImage
