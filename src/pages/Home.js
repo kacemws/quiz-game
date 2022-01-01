@@ -1,4 +1,9 @@
-import { HomeDescription, HomeImage, PageTitle } from "../Components";
+import {
+  HomeDescription,
+  HomeImage,
+  PageTitle,
+  QuizSample,
+} from "../Components";
 import ready from "../assets/images/illustrations/ready.png";
 import topOfBooks from "../assets/images/illustrations/top-of-books.png";
 import universe from "../assets/images/illustrations/universe.png";
@@ -43,6 +48,7 @@ export const Home = ({ ...props }) => {
           title="Les quizs n'ont jamais était si fun !"
         />
         <PageTitle>Plonger dans un monde rempli de nouveaux défis</PageTitle>
+        <QuizSample />
       </section>
     </div>
   );
