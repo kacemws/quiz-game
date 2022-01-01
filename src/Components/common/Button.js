@@ -1,4 +1,3 @@
-import { Button } from "antd";
 import { Title } from ".";
 
 const basicShape = "m-0 rounded h-10 px-6";
@@ -12,9 +11,9 @@ export const PrimaryButton = ({ title, ...props }) => {
   };
 
   return (
-    <Button className={style()} type="primary" {...props}>
+    <button className={style()} {...props}>
       <Title inverted>{title}</Title>
-    </Button>
+    </button>
   );
 };
 
@@ -26,11 +25,11 @@ export const OutlinedButton = ({ title, ...props }) => {
   };
 
   return (
-    <Button className={style()} type="ghost" {...props}>
+    <button className={style()} type="ghost" {...props}>
       <Title inverted color="text-primary-300">
         {title}
       </Title>
-    </Button>
+    </button>
   );
 };
 
@@ -42,9 +41,9 @@ export const TertiaryButton = ({ title, ...props }) => {
   };
 
   return (
-    <Button className={style()} {...props}>
+    <button className={style()} {...props}>
       <Title>{title}</Title>
-    </Button>
+    </button>
   );
 };
 export const DangerButton = ({ title, ...props }) => {
@@ -55,8 +54,8 @@ export const DangerButton = ({ title, ...props }) => {
   };
 
   return (
-    <Button className={style()} {...props}>
+    <button className={style()} {...props}>
       <Title inverted>{title}</Title>
-    </Button>
+    </button>
   );
 };
