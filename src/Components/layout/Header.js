@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, PrimaryButton, Title } from "..";
+import { AddQuizModal, PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
 const StockHeader = ({ ...props }) => {
   const position = "sticky top-0 z-50";
@@ -47,19 +47,8 @@ const StockHeader = ({ ...props }) => {
           }}
         />
       </header>
-      <Modal
-        isOpen={open}
-        button="Sauvegarder"
-        setIsOpen={(_) => {
-          setIsOpen(!open);
-        }}
-        title="Créer un quiz"
-        // onClose={(_) => {
-        //   setIsOpen(false);
-        // }}
-      ></Modal>
+      <AddQuizModal open={open} setOpen={setIsOpen} />
     </>
   );
 };
-
 export const Header = React.memo(StockHeader);
