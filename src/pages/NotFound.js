@@ -4,7 +4,7 @@ import illustration from "../assets/images/illustrations/404.svg";
 const Wrapper = ({ children }) => {
   return <div className="my-4">{children}</div>;
 };
-export const NotFound = ({}) => {
+export const NotFound = () => {
   const navigate = useNavigate();
   return (
     <div className="flex-1 w-ful flex flex-col md:flex-row items-center justify-center">

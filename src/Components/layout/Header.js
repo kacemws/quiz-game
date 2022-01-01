@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PrimaryButton, Title } from "..";
+import { Modal, PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
 const StockHeader = ({ ...props }) => {
   const position = "sticky top-0 z-50";
@@ -7,6 +7,8 @@ const StockHeader = ({ ...props }) => {
   const items = "flex items-center justify-between";
   const bg = "bg-neutral-200";
   const [glass, setGlass] = useState("");
+
+  const [open, setIsOpen] = useState(false);
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -31,14 +33,32 @@ const StockHeader = ({ ...props }) => {
   }, []);
 
   return (
-    <header className={`${position} ${size} ${items} ${bg} ${glass} `}>
-      <div className="flex items-center">
-        <img src={logo} alt="app's logo" className="h-10 w-10" />
-        <div className="mx-1" />
-        <Title>DOTQUIZ</Title>
-      </div>
-      <PrimaryButton title="Créer un quiz" />
-    </header>
+    <>
+      <header className={`${position} ${size} ${items} ${bg} ${glass} `}>
+        <div className="flex items-center">
+          <img src={logo} alt="app's logo" className="h-10 w-10" />
+          <div className="mx-1" />
+          <Title>DOTQUIZ</Title>
+        </div>
+        <PrimaryButton
+          title="Créer un quiz"
+          onClick={(_) => {
+            setIsOpen(true);
+          }}
+        />
+      </header>
+      <Modal
+        isOpen={open}
+        button="Sauvegarder"
+        setIsOpen={(_) => {
+          setIsOpen(!open);
+        }}
+        title="Créer un quiz"
+        // onClose={(_) => {
+        //   setIsOpen(false);
+        // }}
+      ></Modal>
+    </>
   );
 };
 
