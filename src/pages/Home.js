@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import {
   HomeDescription,
   HomeImage,
+  OutlinedButton,
   PageTitle,
   QuizSample,
 } from "../Components";
@@ -13,8 +15,9 @@ import circle from "../assets/images/shapes/half-circle.svg";
 import bottom from "../assets/images/shapes/bottom.svg";
 
 export const Home = ({ ...props }) => {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-full w-full">
+    <div className="min-h-full w-full overflow-x-hidden">
       <section className="flex flex-col md:flex-row justify-between items-center my-4">
         <img src={topStripe} className="absolute -right-0" alt="stripe" />
         <HomeDescription
@@ -58,6 +61,15 @@ export const Home = ({ ...props }) => {
         <PageTitle>Plonger dans un monde rempli de nouveaux défis</PageTitle>
         <QuizSample />
       </section>
+      {/* ********* */}
+      <div className="py-4 w-full flex items-center justify-center">
+        <OutlinedButton
+          title="Découvrir plus"
+          onClick={(_) => {
+            navigate("/quizzes/all");
+          }}
+        />
+      </div>
     </div>
   );
 };
