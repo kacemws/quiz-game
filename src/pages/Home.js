@@ -21,8 +21,13 @@ export const Home = ({ ...props }) => {
           title="Les quizs n'ont jamais était si fun !"
           description="Défiez vos ami(e)s, entrenez vous, vous décidez ! DOTNET vous offre la possibilité de jouer à des quizs fais par notre communauté, ou même les votres !"
           buttonContent="Commencer dès maintenant !"
+          x={-200}
         />
-        <HomeImage img={ready} title="Les quizs n'ont jamais était si fun !" />
+        <HomeImage
+          img={ready}
+          title="Les quizs n'ont jamais était si fun !"
+          x={200}
+        />
       </section>
       {/* ********* */}
       <section className="flex flex-col md:flex-row justify-between items-center my-12">
@@ -31,6 +36,7 @@ export const Home = ({ ...props }) => {
         <HomeImage
           img={topOfBooks}
           title="Les quizs n'ont jamais était si fun !"
+          x={-200}
         />
         <HomeDescription
           title="Mettez vos amis à l'épreuve !"
@@ -38,6 +44,7 @@ export const Home = ({ ...props }) => {
             "DOTQUIZ vous offre la possibilité de créer vos propre quizs ! Mettez vos amis à l'épreuve que sa soit dans de la culture générale Ou sur votre relation !"
           }
           buttonContent="Créer un quiz"
+          x={200}
         />
       </section>
       {/* ********* */}
@@ -46,6 +53,7 @@ export const Home = ({ ...props }) => {
         <HomeImage
           img={universe}
           title="Les quizs n'ont jamais était si fun !"
+          y={100}
         />
         <PageTitle>Plonger dans un monde rempli de nouveaux défis</PageTitle>
         <QuizSample />
