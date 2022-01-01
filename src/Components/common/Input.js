@@ -40,7 +40,10 @@ export const Input = ({
         {error === "" ? (
           ""
         ) : (
-          <span style={{ textTransform: "initial" }} className="italic">
+          <span
+            style={{ textTransform: "initial" }}
+            className="italic text-base"
+          >
             {" - " + error}
           </span>
         )}
