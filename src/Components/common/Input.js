@@ -31,6 +31,7 @@ export const Input = ({
   validate,
   defaultValue = "",
   password = false,
+  before = <></>,
   aside = <></>,
 }) => {
   const [finalType, setType] = React.useState(type);
@@ -53,6 +54,7 @@ export const Input = ({
         )}
       </Body>
       <div className="relative flex items-center">
+        {before}
         <input
           name={name}
           type={finalType}
