@@ -11,6 +11,7 @@ function App() {
            * Quiz By ID (description and infos) if quiz is still draft, navigate again to all
            * Quiz By ID (questions and answers)
            * Creation is just a modal
+           * update is just a modal
            * 404 page (done)
            */}
           <Route path="/" element={<Home />} />

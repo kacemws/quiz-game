@@ -12,7 +12,6 @@ const StockHeader = ({ ...props }) => {
 
   const handleScroll = () => {
     const position = window.pageYOffset;
-    console.log({ position });
     if (position !== 0)
       setGlass(
         "bg-clip-border backdrop-blur-xl bg-opacity-60 border-y border-gray-200"

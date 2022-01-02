@@ -31,11 +31,15 @@ export const Input = ({
   validate,
   defaultValue = "",
   password = false,
+  aside = <></>,
 }) => {
   const [finalType, setType] = React.useState(type);
   return (
     <div className={`flex flex-col my-2 ${className}`}>
-      <Body color={error === "" ? "text-blackText-300" : "text-red-500"}>
+      <Body
+        color={error === "" ? "text-blackText-300" : "text-red-500"}
+        align="left"
+      >
         {label}
         {error === "" ? (
           ""
@@ -89,8 +93,11 @@ export const Input = ({
             )}
           </div>
         )}
+        {aside}
       </div>
-      <Caption color="text-gray-400">{underText}</Caption>
+      <Caption color="text-gray-400" align="left">
+        {underText}
+      </Caption>
     </div>
   );
 };
