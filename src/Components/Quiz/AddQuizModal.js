@@ -1,6 +1,38 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Modal, Input, Steps, OutlinedButton, TertiaryButton } from "../";
+import {
+  Modal,
+  Input,
+  Steps,
+  PrimaryButton,
+  OutlinedButton,
+  TertiaryButton,
+  Select,
+  Checkbox,
+} from "../";
+import { MinusIcon } from "@heroicons/react/outline";
+
+const questionTypes = [
+  {
+    label: "INPUT",
+    value: "INPUT",
+  },
+  {
+    label: "CHECKBOX",
+    value: "CHECKBOX",
+  },
+];
+
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 const InfosStep = ({ setStep, data, setData }) => {
   const {
@@ -57,29 +89,301 @@ const InfosStep = ({ setStep, data, setData }) => {
 };
 
 const QuestionsQuiz = ({ setStep, data, setData }) => {
+  const {
+    register,
+    unregister,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({ mode: "onChange" }); //form validation
+
+  const [questions, setQuestions] = useState([
+    {
+      id: makeid(6),
+      question: "",
+      type: "INPUT",
+      propositions: [
+        {
+          id: makeid(4),
+          valid: true,
+          content: "",
+        },
+      ],
+    },
+  ]);
+
+  const addQuestion = () => {
+    setQuestions((questions) => {
+      let aux = [...questions];
+      aux.push({
+        id: makeid(6),
+        question: "",
+        type: "INPUT",
+        propositions: [
+          {
+            id: makeid(4),
+            valid: true,
+            content: "",
+          },
+        ],
+      });
+      return aux;
+    });
+  };
+
+  const changeQuestionType = (id, value) => {
+    const index = questions.findIndex((question) => question.id === id);
+    const aux = [...questions];
+    aux[index].type = value;
+    aux[index].propositions.forEach((proposition) => {
+      unregister(`question-${id}-proposition-${proposition.id}`);
+    });
+    aux[index].propositions = [{ ...aux[index].propositions[0], valid: true }];
+    setQuestions(aux);
+  };
+
+  const removeQuestion = (id) => {
+    const index = questions.findIndex((question) => question.id === id);
+    const aux = [...questions];
+    aux[index].propositions.forEach((proposition) => {
+      unregister(`question-${id}-proposition-${proposition.id}`);
+    });
+    unregister(`question-${id}`);
+
+    aux.splice(index, 1);
+    setQuestions(aux);
+  };
+
+  const addProposition = (questionId) => {
+    const question = questions.findIndex(
+      (question) => question.id === questionId
+    );
+    const aux = [...questions];
+
+    aux[question].propositions.push({
+      id: makeid(4),
+      valid: false,
+      content: "",
+    });
+    setQuestions(aux);
+  };
+
+  const removeProposition = (questionId, propositionId) => {
+    const question = questions.findIndex(
+      (question) => question.id === questionId
+    );
+    const aux = [...questions];
+    const auxQuestion = { ...aux[question] };
+
+    const index = auxQuestion.propositions.findIndex(
+      (proposition) => proposition.id === propositionId
+    );
+
+    auxQuestion.propositions.splice(index, 1);
+
+    aux[question] = auxQuestion;
+    unregister(`question-${questionId}-proposition-${propositionId}`);
+    setQuestions(aux);
+  };
+
+  console.log({ errors });
+
   return (
-    <>
-      <Input label="Nom du quiz" />
-      <Input
-        label="Mot de passe"
-        underText="Protéger votre quiz avec un mot de passe"
-        password
-      />
-      <div className="w-full flex justify-between">
+    <form
+      onSubmit={handleSubmit((formData) => {
+        try {
+          const aux = [...questions];
+          // transforming to readble object
+          aux.forEach((question) => {
+            question.question = formData[`question-${question.id}`];
+            // to verify that at least one option was checked by question
+            let foundValid = undefined;
+            question.propositions.forEach((proposition) => {
+              proposition.valid =
+                question.type === "INPUT"
+                  ? true
+                  : formData[
+                      `question-${question.id}-proposition-${proposition.id}-valid`
+                    ];
+              proposition.content =
+                formData[
+                  `question-${question.id}-proposition-${proposition.id}`
+                ];
+              if (proposition.valid) {
+                // to make sure that only 1 option is selected
+                if (foundValid) {
+                  throw new Error(
+                    JSON.stringify({
+                      question: question.id,
+                      message:
+                        "Vous ne pouvez séléctionner qu'une seule option",
+                    })
+                  );
+                }
+                foundValid = true;
+              }
+            });
+            if (!foundValid) {
+              throw new Error(
+                JSON.stringify({
+                  question: question.id,
+                  message: "Veuillez séléctionner une option",
+                })
+              );
+            }
+          });
+          // go to next step
+          setData({ questions: [...aux], ...data });
+          setStep(3);
+        } catch ({ message }) {
+          const error = JSON.parse(message);
+          if (error.question) {
+            setError(`question-${error.question}`, {
+              message: error.message,
+              type: "options",
+            });
+          }
+          console.log({ error });
+        }
+      })}
+    >
+      <div className="questions mb-4 max-h-[60vh] overflow-y-auto px-2">
+        {questions.map((question, index) => {
+          return (
+            <div className="w-full my-2" key={question.id}>
+              {/* the question itself */}
+              <Input
+                className="flex-1"
+                label="Question"
+                name={`question-${question.id}`}
+                defaultValue={question.question}
+                error={
+                  errors[`question-${question.id}`]
+                    ? errors[`question-${question.id}`].message || "obligatoire"
+                    : ""
+                }
+                register={register}
+                aside={
+                  questions.length !== 1 && (
+                    <div
+                      className="cursor-pointer h-11 w-11 rounded bg-rose-600 ml-2 border-red-500 ring-red-200 focus:border-red-300 outline-none flex items-center justify-center text-sm"
+                      onClick={(e) => {
+                        // in case i add any click event in the input component
+                        e.preventDefault();
+                        removeQuestion(question.id);
+                      }}
+                    >
+                      <MinusIcon className="w-6 h-6" />
+                    </div>
+                  )
+                }
+                required
+              />
+
+              {/* type of answers */}
+              <Select
+                label="Type de question"
+                options={questionTypes}
+                selected={{
+                  label: question.type,
+                  value: question.type,
+                }}
+                setSelected={({ value }) => {
+                  changeQuestionType(question.id, value);
+                }}
+              />
+
+              {/* the propositions */}
+              <div className="w-full my-2 pl-2">
+                {question.propositions.map((proposition, propositionIndex) => {
+                  return (
+                    <div key={proposition.id}>
+                      <Input
+                        before={
+                          question.type === "CHECKBOX" && (
+                            <Checkbox
+                              name={`question-${question.id}-proposition-${proposition.id}-valid`}
+                              className="mr-2"
+                              checked={proposition.valid}
+                              register={register}
+                              error={errors[`question-${question.id}`]}
+                            />
+                          )
+                        }
+                        className="flex-1"
+                        label="Proposition"
+                        name={`question-${question.id}-proposition-${proposition.id}`}
+                        defaultValue={proposition.content}
+                        error={
+                          errors[
+                            `question-${question.id}-proposition-${proposition.id}`
+                          ]
+                            ? "obligatoire"
+                            : ""
+                        }
+                        register={register}
+                        aside={
+                          question.propositions.length !== 1 && (
+                            <div
+                              className="cursor-pointer h-11 w-11 rounded bg-rose-600 ml-2 border-red-500 ring-red-200 focus:border-red-300 outline-none flex items-center justify-center text-sm"
+                              onClick={(e) => {
+                                // in case i add any click event in the input component
+                                e.preventDefault();
+                                removeProposition(question.id, proposition.id);
+                              }}
+                            >
+                              <MinusIcon className="w-6 h-6" />
+                            </div>
+                          )
+                        }
+                        required
+                      />
+                      {/* add a question || separator */}
+                      {propositionIndex === question.propositions.length - 1 ? (
+                        <div className="w-full flex flex-col md:flex-row justify-end">
+                          {question.type !== "INPUT" && (
+                            <PrimaryButton
+                              title={"Ajouter une proposition"}
+                              onClick={(_) => {
+                                addProposition(question.id);
+                              }}
+                            />
+                          )}
+                          {index === questions.length - 1 && (
+                            <div className="mt-2 md:mt-0 md:ml-2">
+                              <PrimaryButton
+                                title={"Ajouter une question"}
+                                onClick={(_) => {
+                                  addQuestion();
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <hr />
+                      )}
+                      {/* add a question || separator */}
+                    </div>
+                  );
+                })}
+              </div>
+              <hr />
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="buttons w-full flex justify-between">
         <TertiaryButton
           title="Précédent"
           onClick={(_) => {
             setStep(1);
           }}
         />
-        <OutlinedButton
-          title="Confirmer"
-          onClick={(_) => {
-            // setStep(2);
-          }}
-        />
+        <OutlinedButton title="Suivant" />
       </div>
-    </>
+    </form>
   );
 };
 
@@ -89,6 +393,7 @@ export const AddQuizModal = ({ open, setOpen }) => {
   const steps = {
     1: <InfosStep setStep={setStep} data={data} setData={setData} />,
     2: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
+    3: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
   };
   return (
     <Modal
@@ -103,7 +408,10 @@ export const AddQuizModal = ({ open, setOpen }) => {
         setData({});
       }}
     >
-      <Steps steps={["Informations", "Questions"]} current={step - 1} />
+      <Steps
+        steps={["Informations", "Questions", "Récapitulatif"]}
+        current={step - 1}
+      />
       {steps[step]}
     </Modal>
   );
