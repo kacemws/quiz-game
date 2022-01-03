@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
+import { typesAtom, difficultiesAtom } from "../../data";
 import {
   Modal,
   Input,
@@ -12,17 +14,6 @@ import {
 } from "../";
 import { MinusIcon } from "@heroicons/react/outline";
 import waiting from "../../assets/images/illustrations/waiting.png";
-
-const questionTypes = [
-  {
-    label: "INPUT",
-    value: "INPUT",
-  },
-  {
-    label: "CHECKBOX",
-    value: "CHECKBOX",
-  },
-];
 
 function makeid(length) {
   var result = "";
@@ -109,12 +100,18 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
       setQuestions(data.questions);
     }
   }, [data]);
+  const [types] = useAtom(typesAtom);
+  const [difficulties] = useAtom(difficultiesAtom);
+  const [difficulty, setDifficulty] = useState(difficulties[0]);
 
   const [questions, setQuestions] = useState([
     {
       id: makeid(6),
       question: "",
-      type: "INPUT",
+      type: {
+        label: "INPUT",
+        value: 0,
+      },
       propositions: [
         {
           id: makeid(4),
@@ -131,7 +128,10 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
       aux.push({
         id: makeid(6),
         question: "",
-        type: "INPUT",
+        type: {
+          label: "INPUT",
+          value: 0,
+        },
         propositions: [
           {
             id: makeid(4),
@@ -213,7 +213,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
             let foundValid = undefined;
             question.propositions.forEach((proposition) => {
               proposition.valid =
-                question.type === "INPUT"
+                question.type.value === 0
                   ? true
                   : formData[
                       `question-${question.id}-proposition-${proposition.id}-valid`
@@ -246,7 +246,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
             }
           });
           // go to next step
-          setData({ ...data, questions: [...aux] });
+          setData({ ...data, questions: [...aux], difficulty });
           setStep(3);
         } catch ({ message }) {
           const error = JSON.parse(message);
@@ -261,6 +261,12 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
       })}
     >
       <div className="questions mb-4 max-h-[60vh] overflow-y-auto px-2">
+        <Select
+          label="Difficulté du quiz"
+          options={difficulties}
+          selected={difficulty}
+          setSelected={setDifficulty}
+        />
         {questions.map((question, index) => {
           return (
             <div className="w-full my-2" key={question.id}>
@@ -296,12 +302,9 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
               {/* type of answers */}
               <Select
                 label="Type de question"
-                options={questionTypes}
-                selected={{
-                  label: question.type,
-                  value: question.type,
-                }}
-                setSelected={({ value }) => {
+                options={types}
+                selected={question.type}
+                setSelected={(value) => {
                   changeQuestionType(question.id, value);
                 }}
               />
@@ -313,7 +316,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                     <div key={proposition.id}>
                       <Input
                         before={
-                          question.type === "CHECKBOX" && (
+                          question.type.value === 1 && (
                             <Checkbox
                               name={`question-${question.id}-proposition-${proposition.id}-valid`}
                               className="mr-2"
@@ -354,7 +357,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                       {/* add a question || separator */}
                       {propositionIndex === question.propositions.length - 1 ? (
                         <div className="w-full flex flex-col md:flex-row justify-end">
-                          {question.type !== "INPUT" && (
+                          {question.type.value !== 0 && (
                             <PrimaryButton
                               title={"Ajouter une proposition"}
                               onClick={(_) => {

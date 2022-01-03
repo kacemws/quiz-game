@@ -1,12 +1,12 @@
 export const Loader = ({ fullScreen = false }) => {
-  const dimensions = fullScreen ? "screen" : "full";
-  const circle = fullScreen ? "12" : "5";
+  const dimensions = fullScreen ? "w-screen h-screen" : "w-full h-full";
+  const circle = fullScreen ? "w-12 h-12" : "h-5 w-5";
   return (
     <div
-      className={`absolute top-0 left-0 bg-neutral-200 flex items-center justify-center w-${dimensions} h-${dimensions}`}
+      className={`absolute top-0 left-0 bg-neutral-200 flex items-center justify-center ${dimensions}`}
     >
       <svg
-        className={`animate-spin -ml-1 mr-3 h-${circle} w-${circle} text-primary-300`}
+        className={`animate-spin -ml-1 mr-3 ${circle} text-primary-300`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

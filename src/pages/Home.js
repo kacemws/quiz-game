@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { statesAtom, typesAtom, difficultiesAtom } from "../data";
+import { getStatuses, getTypes, getDifficulties } from "../api";
 import {
   HomeDescription,
   HomeImage,
@@ -18,7 +21,43 @@ import bottom from "../assets/images/shapes/bottom.svg";
 
 export const Home = ({ ...props }) => {
   const navigate = useNavigate();
+  const [, setStates] = useAtom(statesAtom);
+  const [, setTypes] = useAtom(typesAtom);
+  const [, setDifficulties] = useAtom(difficultiesAtom);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setStates([]);
+    setTypes([]);
+    getStatuses().then(({ data }) => {
+      const states = Object.keys(data).map((label) => {
+        return {
+          label,
+          value: data[label],
+        };
+      });
+      getTypes().then(({ data }) => {
+        const types = Object.keys(data).map((label) => {
+          return {
+            label,
+            value: data[label],
+          };
+        });
+        getDifficulties().then(({ data }) => {
+          const difficulties = Object.keys(data).map((label) => {
+            return {
+              label,
+              value: data[label],
+            };
+          });
+          setStates(states);
+          setTypes(types);
+          setDifficulties(difficulties);
+          setLoading(false);
+        });
+      });
+    });
+  }, [setStates, setTypes, setDifficulties]);
   return (
     <>
       {loading ? (
