@@ -33,6 +33,7 @@ export const Input = ({
   password = false,
   before = <></>,
   aside = <></>,
+  disabled = false,
 }) => {
   const [finalType, setType] = React.useState(type);
   return (
@@ -73,6 +74,7 @@ export const Input = ({
               ? "focus:border-primary-300 border-gray-300 ring-primary-200"
               : "border-red-500 ring-red-200 focus:border-red-300"
           } `}
+          disabled={disabled}
         />
         {password && (
           <div className="absolute right-0 mx-2 select-none outline-none p-2 h-11 flex items-center justify-center">

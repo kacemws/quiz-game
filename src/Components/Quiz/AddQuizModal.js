@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Modal,
@@ -40,13 +40,18 @@ const InfosStep = ({ setStep, data, setData }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "onChange" }); //form validation
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      name: data?.name,
+    },
+  }); //form validation
 
   return (
     <form
-      onSubmit={handleSubmit((data) => {
+      onSubmit={handleSubmit((formData) => {
         try {
-          setData({ ...data });
+          setData({ ...data, ...formData });
           setStep(2);
         } catch (error) {
           console.log({ error });
@@ -57,6 +62,7 @@ const InfosStep = ({ setStep, data, setData }) => {
         label="Nom du quiz"
         name="name"
         defaultValue={data?.name}
+        disabled={data?.name}
         error={errors?.name ? "obligatoire" : ""}
         register={register}
         required
@@ -97,6 +103,12 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
     setError,
     formState: { errors },
   } = useForm({ mode: "onChange" }); //form validation
+
+  useEffect(() => {
+    if (data.questions) {
+      setQuestions(data.questions);
+    }
+  }, [data]);
 
   const [questions, setQuestions] = useState([
     {
@@ -234,7 +246,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
             }
           });
           // go to next step
-          setData({ questions: [...aux], ...data });
+          setData({ ...data, questions: [...aux] });
           setStep(3);
         } catch ({ message }) {
           const error = JSON.parse(message);
@@ -401,7 +413,12 @@ const Recap = ({ setStep, data }) => {
         />
         <div className="flex">
           <div className="mr-2">
-            <OutlinedButton title="Sauvegarder" />
+            <OutlinedButton
+              title="Sauvegarder"
+              onClick={(_) => {
+                console.log({ data });
+              }}
+            />
           </div>
           <PrimaryButton title="Publier" />
         </div>
