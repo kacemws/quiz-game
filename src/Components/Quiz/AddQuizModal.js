@@ -11,6 +11,7 @@ import {
   Checkbox,
 } from "../";
 import { MinusIcon } from "@heroicons/react/outline";
+import waiting from "../../assets/images/illustrations/waiting.png";
 
 const questionTypes = [
   {
@@ -387,13 +388,35 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
   );
 };
 
+const Recap = ({ setStep, data }) => {
+  return (
+    <div className="w-full flex flex-col items-center">
+      <img className="h-52" src={waiting} alt="waiting for your action !" />
+      <div className="w-full flex items-center justify-between">
+        <TertiaryButton
+          title="Précédent"
+          onClick={(_) => {
+            setStep(2);
+          }}
+        />
+        <div className="flex">
+          <div className="mr-2">
+            <OutlinedButton title="Sauvegarder" />
+          </div>
+          <PrimaryButton title="Publier" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const AddQuizModal = ({ open, setOpen }) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState({});
   const steps = {
     1: <InfosStep setStep={setStep} data={data} setData={setData} />,
     2: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
-    3: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
+    3: <Recap setStep={setStep} data={data} />,
   };
   return (
     <Modal
