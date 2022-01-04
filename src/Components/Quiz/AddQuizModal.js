@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAtom } from "jotai";
-import { typesAtom, difficultiesAtom } from "../../data";
+import { statesAtom, typesAtom, difficultiesAtom } from "../../data";
 import {
   Modal,
   Input,
@@ -15,21 +15,22 @@ import {
 import { MinusIcon } from "@heroicons/react/outline";
 import waiting from "../../assets/images/illustrations/waiting.png";
 
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+import {
+  makeid,
+  createQuiz,
+  addQuestion,
+  addProposition,
+  removeQuestion,
+  removeProposition,
+  changeQuestionType,
+  updateQuiz,
+} from "../../services";
 
 const InfosStep = ({ setStep, data, setData }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -38,14 +39,22 @@ const InfosStep = ({ setStep, data, setData }) => {
     },
   }); //form validation
 
+  const [loading, setLoading] = useState(false);
   return (
     <form
-      onSubmit={handleSubmit((formData) => {
+      onSubmit={handleSubmit(async (formData) => {
         try {
-          setData({ ...data, ...formData });
+          setLoading(true);
+          const aux = { ...data, ...formData };
+          const id = await createQuiz(aux);
+          setData({ ...aux, id });
           setStep(2);
         } catch (error) {
-          console.log({ error });
+          setLoading(false);
+          setError("name", {
+            message: error?.message,
+            type: "manual",
+          });
         }
       })}
     >
@@ -54,7 +63,7 @@ const InfosStep = ({ setStep, data, setData }) => {
         name="name"
         defaultValue={data?.name}
         disabled={data?.name}
-        error={errors?.name ? "obligatoire" : ""}
+        error={errors?.name ? errors?.name?.message || "obligatoire" : ""}
         register={register}
         required
       />
@@ -80,7 +89,7 @@ const InfosStep = ({ setStep, data, setData }) => {
         required
       />
       <div className="w-full flex justify-end">
-        <OutlinedButton title="Suivant" type="primary" />
+        <OutlinedButton title="Suivant" type="primary" disabled={loading} />
       </div>
     </form>
   );
@@ -121,83 +130,6 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
       ],
     },
   ]);
-
-  const addQuestion = () => {
-    setQuestions((questions) => {
-      let aux = [...questions];
-      aux.push({
-        id: makeid(6),
-        question: "",
-        type: {
-          label: "INPUT",
-          value: 0,
-        },
-        propositions: [
-          {
-            id: makeid(4),
-            valid: true,
-            content: "",
-          },
-        ],
-      });
-      return aux;
-    });
-  };
-
-  const changeQuestionType = (id, value) => {
-    const index = questions.findIndex((question) => question.id === id);
-    const aux = [...questions];
-    aux[index].type = value;
-    aux[index].propositions.forEach((proposition) => {
-      unregister(`question-${id}-proposition-${proposition.id}`);
-    });
-    aux[index].propositions = [{ ...aux[index].propositions[0], valid: true }];
-    setQuestions(aux);
-  };
-
-  const removeQuestion = (id) => {
-    const index = questions.findIndex((question) => question.id === id);
-    const aux = [...questions];
-    aux[index].propositions.forEach((proposition) => {
-      unregister(`question-${id}-proposition-${proposition.id}`);
-    });
-    unregister(`question-${id}`);
-
-    aux.splice(index, 1);
-    setQuestions(aux);
-  };
-
-  const addProposition = (questionId) => {
-    const question = questions.findIndex(
-      (question) => question.id === questionId
-    );
-    const aux = [...questions];
-
-    aux[question].propositions.push({
-      id: makeid(4),
-      valid: false,
-      content: "",
-    });
-    setQuestions(aux);
-  };
-
-  const removeProposition = (questionId, propositionId) => {
-    const question = questions.findIndex(
-      (question) => question.id === questionId
-    );
-    const aux = [...questions];
-    const auxQuestion = { ...aux[question] };
-
-    const index = auxQuestion.propositions.findIndex(
-      (proposition) => proposition.id === propositionId
-    );
-
-    auxQuestion.propositions.splice(index, 1);
-
-    aux[question] = auxQuestion;
-    unregister(`question-${questionId}-proposition-${propositionId}`);
-    setQuestions(aux);
-  };
 
   console.log({ errors });
 
@@ -289,7 +221,12 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                       onClick={(e) => {
                         // in case i add any click event in the input component
                         e.preventDefault();
-                        removeQuestion(question.id);
+                        removeQuestion(
+                          questions,
+                          setQuestions,
+                          unregister,
+                          question.id
+                        );
                       }}
                     >
                       <MinusIcon className="w-6 h-6" />
@@ -305,7 +242,13 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                 options={types}
                 selected={question.type}
                 setSelected={(value) => {
-                  changeQuestionType(question.id, value);
+                  changeQuestionType(
+                    questions,
+                    setQuestions,
+                    unregister,
+                    question.id,
+                    value
+                  );
                 }}
               />
 
@@ -345,7 +288,13 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                               onClick={(e) => {
                                 // in case i add any click event in the input component
                                 e.preventDefault();
-                                removeProposition(question.id, proposition.id);
+                                removeProposition(
+                                  questions,
+                                  setQuestions,
+                                  unregister,
+                                  question.id,
+                                  proposition.id
+                                );
                               }}
                             >
                               <MinusIcon className="w-6 h-6" />
@@ -361,7 +310,11 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                             <PrimaryButton
                               title={"Ajouter une proposition"}
                               onClick={(_) => {
-                                addProposition(question.id);
+                                addProposition(
+                                  questions,
+                                  setQuestions,
+                                  question.id
+                                );
                               }}
                             />
                           )}
@@ -370,7 +323,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
                               <PrimaryButton
                                 title={"Ajouter une question"}
                                 onClick={(_) => {
-                                  addQuestion();
+                                  addQuestion(setQuestions);
                                 }}
                               />
                             </div>
@@ -391,12 +344,12 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
       </div>
 
       <div className="buttons w-full flex justify-between">
-        <TertiaryButton
+        {/* <TertiaryButton
           title="Précédent"
           onClick={(_) => {
             setStep(1);
           }}
-        />
+        /> */}
         <OutlinedButton title="Suivant" />
       </div>
     </form>
@@ -404,6 +357,8 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
 };
 
 const Recap = ({ setStep, data }) => {
+  const [states] = useAtom(statesAtom);
+
   return (
     <div className="w-full flex flex-col items-center">
       <img className="h-52" src={waiting} alt="waiting for your action !" />
@@ -418,12 +373,31 @@ const Recap = ({ setStep, data }) => {
           <div className="mr-2">
             <OutlinedButton
               title="Sauvegarder"
-              onClick={(_) => {
-                console.log({ data });
+              onClick={async (_) => {
+                try {
+                  await updateQuiz({
+                    ...data,
+                    state: states.find((state) => state?.label === "DRAFT"),
+                  });
+                } catch (error) {
+                  console.log({ error });
+                }
               }}
             />
           </div>
-          <PrimaryButton title="Publier" />
+          <PrimaryButton
+            title="Publier"
+            onClick={async (_) => {
+              try {
+                await updateQuiz({
+                  ...data,
+                  state: states.find((state) => state?.label === "PUBLISHED"),
+                });
+              } catch (error) {
+                console.log({ error });
+              }
+            }}
+          />
         </div>
       </div>
     </div>
