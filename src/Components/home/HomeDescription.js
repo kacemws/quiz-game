@@ -4,6 +4,7 @@ export const HomeDescription = ({
   title,
   description,
   buttonContent,
+  buttonClick = () => {},
   x = 0,
   y = 0,
 }) => {
@@ -30,7 +31,7 @@ export const HomeDescription = ({
       <div className="my-6" />
       <Body>{description}</Body>
       <div className="my-6" />
-      <OutlinedButton title={buttonContent} />
+      <OutlinedButton title={buttonContent} onClick={buttonClick} />
     </motion.div>
   );
 };

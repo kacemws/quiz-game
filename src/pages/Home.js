@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { statesAtom, typesAtom, difficultiesAtom } from "../data";
 import { getStatuses, getTypes, getDifficulties } from "../api";
 import {
+  AddQuizModal,
   HomeDescription,
   HomeImage,
   Loader,
@@ -25,6 +26,7 @@ export const Home = ({ ...props }) => {
   const [, setTypes] = useAtom(typesAtom);
   const [, setDifficulties] = useAtom(difficultiesAtom);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setStates([]);
@@ -93,6 +95,9 @@ export const Home = ({ ...props }) => {
                 "DOTQUIZ vous offre la possibilité de créer vos propre quizs ! Mettez vos amis à l'épreuve que sa soit dans de la culture générale Ou sur votre relation !"
               }
               buttonContent="Créer un quiz"
+              buttonClick={(_) => {
+                setOpen(true);
+              }}
               x={200}
             />
           </section>
@@ -121,6 +126,7 @@ export const Home = ({ ...props }) => {
         </div>
       )}
       )
+      <AddQuizModal open={open} setOpen={setOpen} />
     </>
   );
 };
