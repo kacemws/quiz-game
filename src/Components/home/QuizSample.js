@@ -19,15 +19,14 @@ const QuizCard = ({ ...props }) => {
   );
 };
 export const QuizSample = ({ quizzes }) => {
-  let data = ["", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1];
   return (
     <ScrollContainer
       className="mt-4 py-1 w-full h-64 overflow-scroll"
       hideScrollbars={false}
     >
       <div className="h-full flex">
-        {data.map((_) => (
-          <QuizCard />
+        {quizzes.map((quiz) => (
+          <QuizCard quiz={quiz} key={quiz.id} />
         ))}
       </div>
     </ScrollContainer>

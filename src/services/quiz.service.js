@@ -1,4 +1,4 @@
-import { addQuiz, putQuiz } from "../api";
+import { addQuiz, putQuiz, getPublishedQuizzes } from "../api";
 export function makeid(length) {
   var result = "";
   var characters =
@@ -155,4 +155,13 @@ export const removeProposition = (
   aux[question] = auxQuestion;
   unregister(`question-${questionId}-proposition-${propositionId}`);
   setQuestions(aux);
+};
+
+export const getPaginatedPublishedQuizzes = async (page = 1, size = 10) => {
+  try {
+    const { data: resp } = await getPublishedQuizzes(page, size);
+    return resp;
+  } catch (error) {
+    throw new Error(error?.message);
+  }
 };

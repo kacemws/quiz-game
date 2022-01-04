@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import { statesAtom, typesAtom, difficultiesAtom } from "../data";
+import { statesAtom, typesAtom, difficultiesAtom, quizzesAtom } from "../data";
 import { getStatuses, getTypes, getDifficulties } from "../api";
 import {
   AddQuizModal,
@@ -19,12 +19,14 @@ import topStripe from "../assets/images/shapes/centred-shape.svg";
 import bottomStripes from "../assets/images/shapes/bottom-stripes.svg";
 import circle from "../assets/images/shapes/half-circle.svg";
 import bottom from "../assets/images/shapes/bottom.svg";
+import { getPaginatedPublishedQuizzes } from "../services";
 
 export const Home = ({ ...props }) => {
   const navigate = useNavigate();
   const [, setStates] = useAtom(statesAtom);
   const [, setTypes] = useAtom(typesAtom);
   const [, setDifficulties] = useAtom(difficultiesAtom);
+  const [quizzes, setQuizzes] = useAtom(quizzesAtom);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
@@ -52,14 +54,18 @@ export const Home = ({ ...props }) => {
               value: data[label],
             };
           });
-          setStates(states);
-          setTypes(types);
-          setDifficulties(difficulties);
-          setLoading(false);
+          getPaginatedPublishedQuizzes(1, 10).then((resp) => {
+            console.log({ resp });
+            setQuizzes(resp);
+            setStates(states);
+            setTypes(types);
+            setDifficulties(difficulties);
+            setLoading(false);
+          });
         });
       });
     });
-  }, [setStates, setTypes, setDifficulties]);
+  }, [setStates, setTypes, setDifficulties, setQuizzes]);
   return (
     <>
       {loading ? (
@@ -112,7 +118,7 @@ export const Home = ({ ...props }) => {
             <PageTitle>
               Plonger dans un monde rempli de nouveaux défis
             </PageTitle>
-            <QuizSample />
+            <QuizSample quizzes={quizzes.items} />
           </section>
           {/* ********* */}
           <div className="py-4 w-full flex items-center justify-center">
