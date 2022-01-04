@@ -1,9 +1,11 @@
-export const Loader = ({ fullScreen = false }) => {
+export const Loader = ({ fullScreen = false, bg = true }) => {
   const dimensions = fullScreen ? "w-screen h-screen" : "w-full h-full";
   const circle = fullScreen ? "w-12 h-12" : "h-5 w-5";
   return (
     <div
-      className={`absolute top-0 left-0 bg-neutral-200 flex items-center justify-center ${dimensions}`}
+      className={`absolute top-0 left-0 ${
+        bg && "bg-neutral-200"
+      } flex items-center justify-center ${dimensions}`}
     >
       <svg
         className={`animate-spin -ml-1 mr-3 ${circle} text-primary-300`}

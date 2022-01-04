@@ -170,7 +170,12 @@ export const removeProposition = (
 export const getPaginatedPublishedQuizzes = async (page = 1, size = 10) => {
   try {
     const { data: resp } = await getPublishedQuizzes(page, size);
-    return resp;
+    return (
+      resp || {
+        items: [],
+        count: 0,
+      }
+    );
   } catch (error) {
     throw new Error(error?.message);
   }

@@ -365,6 +365,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
 const Recap = ({ setStep, data, onClose }) => {
   const [states] = useAtom(statesAtom);
   const [, setQuizzes] = useAtom(quizzesAtom);
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -372,6 +373,7 @@ const Recap = ({ setStep, data, onClose }) => {
       <div className="w-full flex items-center justify-between">
         <TertiaryButton
           title="Précédent"
+          disabled={loading}
           onClick={(_) => {
             setStep(2);
           }}
@@ -380,8 +382,10 @@ const Recap = ({ setStep, data, onClose }) => {
           <div className="mr-2">
             <OutlinedButton
               title="Sauvegarder"
+              disabled={loading}
               onClick={async (_) => {
                 try {
+                  setLoading(true);
                   await updateQuiz(
                     {
                       ...data,
@@ -398,8 +402,10 @@ const Recap = ({ setStep, data, onClose }) => {
           </div>
           <PrimaryButton
             title="Publier"
+            disabled={loading}
             onClick={async (_) => {
               try {
+                setLoading(true);
                 await updateQuiz(
                   {
                     ...data,

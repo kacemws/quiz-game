@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AddQuizModal, PrimaryButton, Title } from "..";
 import logo from "../../assets/images/logo.svg";
 const StockHeader = ({ ...props }) => {
@@ -9,6 +10,8 @@ const StockHeader = ({ ...props }) => {
   const [glass, setGlass] = useState("");
 
   const [open, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -34,7 +37,13 @@ const StockHeader = ({ ...props }) => {
   return (
     <>
       <header className={`${position} ${size} ${items} ${bg} ${glass} `}>
-        <div className="flex items-center">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/");
+          }}
+        >
           <img src={logo} alt="app's logo" className="h-10 w-10" />
           <div className="mx-1" />
           <Title>DOTQUIZ</Title>

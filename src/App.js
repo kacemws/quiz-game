@@ -1,9 +1,9 @@
-import { Layout, Home, NotFound } from "./pages";
+import { Layout, Home, Quizzes, NotFound } from "./pages";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
-    <Layout>
-      <Router>
+    <Router>
+      <Layout>
         <Routes>
           {/*
            * Home (done)
@@ -15,10 +15,11 @@ function App() {
            * 404 page (done)
            */}
           <Route path="/" element={<Home />} />
+          <Route path="/quizzes/all" element={<Quizzes />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
-    </Layout>
+      </Layout>
+    </Router>
   );
 }
 

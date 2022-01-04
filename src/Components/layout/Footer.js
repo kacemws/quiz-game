@@ -6,6 +6,7 @@ import instagram from "../../assets/images/icons/instagram.svg";
 import twitter from "../../assets/images/icons/twitter.svg";
 import ln from "../../assets/images/icons/ln.svg";
 import github from "../../assets/images/icons/github.svg";
+import { useNavigate } from "react-router-dom";
 
 const socials = [
   {
@@ -31,10 +32,18 @@ const socials = [
 ];
 
 const StockFooter = ({ ...props }) => {
+  const navigate = useNavigate();
+
   return (
     <footer className="h-40 min-h-[10rem] w-100 bg-gray-50 px-4 flex flex-col justify-center border-y-2 border-gray-200">
       <div className="flex flex-col justify-evenly md:flex-row md:justify-between items-center h-24 ">
-        <div className="flex items-center">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/");
+          }}
+        >
           <img
             src={logo}
             alt="app's logo"
