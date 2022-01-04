@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAtom } from "jotai";
-import { statesAtom, typesAtom, difficultiesAtom } from "../../data";
+import {
+  statesAtom,
+  typesAtom,
+  difficultiesAtom,
+  quizzesAtom,
+} from "../../data";
 import {
   Modal,
   Input,
@@ -40,13 +45,14 @@ const InfosStep = ({ setStep, data, setData }) => {
   }); //form validation
 
   const [loading, setLoading] = useState(false);
+  const [, setQuizzes] = useAtom(quizzesAtom);
   return (
     <form
       onSubmit={handleSubmit(async (formData) => {
         try {
           setLoading(true);
           const aux = { ...data, ...formData };
-          const id = await createQuiz(aux);
+          const id = await createQuiz(aux, setQuizzes);
           setData({ ...aux, id });
           setStep(2);
         } catch (error) {
@@ -356,8 +362,9 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
   );
 };
 
-const Recap = ({ setStep, data }) => {
+const Recap = ({ setStep, data, onClose }) => {
   const [states] = useAtom(statesAtom);
+  const [, setQuizzes] = useAtom(quizzesAtom);
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -375,10 +382,14 @@ const Recap = ({ setStep, data }) => {
               title="Sauvegarder"
               onClick={async (_) => {
                 try {
-                  await updateQuiz({
-                    ...data,
-                    state: states.find((state) => state?.label === "DRAFT"),
-                  });
+                  await updateQuiz(
+                    {
+                      ...data,
+                      state: states.find((state) => state?.label === "DRAFT"),
+                    },
+                    setQuizzes
+                  );
+                  onClose();
                 } catch (error) {
                   console.log({ error });
                 }
@@ -389,10 +400,14 @@ const Recap = ({ setStep, data }) => {
             title="Publier"
             onClick={async (_) => {
               try {
-                await updateQuiz({
-                  ...data,
-                  state: states.find((state) => state?.label === "PUBLISHED"),
-                });
+                await updateQuiz(
+                  {
+                    ...data,
+                    state: states.find((state) => state?.label === "PUBLISHED"),
+                  },
+                  setQuizzes
+                );
+                onClose();
               } catch (error) {
                 console.log({ error });
               }
@@ -410,7 +425,17 @@ export const AddQuizModal = ({ open, setOpen }) => {
   const steps = {
     1: <InfosStep setStep={setStep} data={data} setData={setData} />,
     2: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
-    3: <Recap setStep={setStep} data={data} />,
+    3: (
+      <Recap
+        setStep={setStep}
+        data={data}
+        onClose={() => {
+          setOpen(false);
+          setStep(1);
+          setData({});
+        }}
+      />
+    ),
   };
   return (
     <Modal

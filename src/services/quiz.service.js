@@ -10,14 +10,19 @@ export function makeid(length) {
   return result;
 }
 
-export const createQuiz = async (data) => {
+export const createQuiz = async (data, setQuizzes) => {
   try {
     // already created
     if (data?.id) return data?.id;
     const { data: resp } = await addQuiz({
       name: data?.name,
       password: data?.password,
+      rating: 0,
+      numberOfVotes: 0,
+      numberOfPlays: 0,
     });
+    const quizzes = await getPaginatedPublishedQuizzes(1, 10);
+    setQuizzes(quizzes);
     return resp?.id;
   } catch (error) {
     if (error?.message === "quiz with the same name already exists") {
@@ -27,7 +32,7 @@ export const createQuiz = async (data) => {
   }
 };
 
-export const updateQuiz = async (data) => {
+export const updateQuiz = async (data, setQuizzes) => {
   try {
     // already created
     if (!data?.id) {
@@ -40,6 +45,9 @@ export const updateQuiz = async (data) => {
       password: data?.password,
       state: data?.state?.value,
       difficulty: data?.difficulty?.value,
+      rating: data?.rating ?? 0,
+      numberOfVotes: data?.numberOfVotes ?? 0,
+      numberOfPlays: data?.numberOfPlays ?? 0,
       quizQuestions: {
         quizId: data?.id,
         questions: [
@@ -59,6 +67,8 @@ export const updateQuiz = async (data) => {
       },
     });
     console.log({ resp });
+    const quizzes = await getPaginatedPublishedQuizzes(1, 10);
+    setQuizzes(quizzes);
     return resp?.id;
   } catch (error) {
     if (error?.message === "quiz with the same name already exists") {
