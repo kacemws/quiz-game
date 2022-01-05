@@ -16,10 +16,12 @@ export const putQuiz = async (id, data) => {
   }
 };
 
-export const getFilteredQuizzes = async (filter = "", page = 1, size = 10) => {
+export const getFilteredQuizzes = async (filter, page = 1, size = 10) => {
   try {
     return await axios.get(
-      `/quizzes?${filter ? "type=" + filter : ""}&page=${page}&size=${size}`
+      `/quizzes?${
+        ![null, undefined, ""].includes(filter) ? "type=" + filter : ""
+      }&page=${page}&size=${size}`
     );
   } catch (error) {
     throw new Error(error?.response?.data);

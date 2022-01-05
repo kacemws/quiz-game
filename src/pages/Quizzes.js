@@ -9,8 +9,10 @@ import {
   QuizCard,
   AddQuizModal,
   OutlinedButton,
+  PopoverComponent,
 } from "../Components";
 import { getAllQuizzes, totalPages } from "../services";
+import { FilterIcon } from "@heroicons/react/outline";
 
 export const Quizzes = ({ ...props }) => {
   const [states] = useAtom(statesAtom);
@@ -25,7 +27,6 @@ export const Quizzes = ({ ...props }) => {
 
   useEffect(() => {
     getAllQuizzes("", 1, 10).then((resp) => {
-      console.log({ resp });
       setQuizzes(resp);
       setLoading(false);
       setInnerLoading(false);
@@ -76,6 +77,22 @@ export const Quizzes = ({ ...props }) => {
             </>
           ) : (
             <div className="flex flex-col items-center">
+              <div className="w-full h-16 flex items-center justify-end">
+                <PopoverComponent
+                  options={[
+                    { label: "Supprimer les filtres", value: "" },
+                    ...states,
+                  ]}
+                  setItem={changeFilter}
+                  button={
+                    <FilterIcon
+                      className={`h-6 w-6 ${
+                        state === "" ? "text-gray-400" : "text-primary-300"
+                      } cursor-pointer`}
+                    />
+                  }
+                />
+              </div>
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-stretch">
                 {quizzes.items.map((quiz) => {
                   return (
@@ -86,18 +103,16 @@ export const Quizzes = ({ ...props }) => {
                 })}
               </div>
               <div className="mt-4 mb-2">
-                <OutlinedButton
-                  title="Afficher plus"
-                  disabled={
-                    innerLoading ||
-                    loading ||
-                    page === totalPages(10, quizzes.count)
-                  }
-                  loading={innerLoading || loading}
-                  onClick={(_) => {
-                    paginate();
-                  }}
-                />
+                {page !== totalPages(10, quizzes.count) && (
+                  <OutlinedButton
+                    title="Afficher plus"
+                    disabled={innerLoading || loading}
+                    loading={innerLoading || loading}
+                    onClick={(_) => {
+                      paginate();
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
