@@ -3,7 +3,6 @@ import { Heading, Subheading } from "..";
 import { StarIcon, ClipboardListIcon } from "@heroicons/react/outline/";
 
 export const QuizCard = ({ quiz, list = true, ...props }) => {
-  console.log({ quiz });
   return (
     <motion.div
       key={quiz.id}

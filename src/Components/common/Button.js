@@ -14,7 +14,7 @@ const ButtonLoader = ({ loading }) => {
   );
 };
 
-export const PrimaryButton = ({ title, disabled, ...props }) => {
+export const PrimaryButton = ({ title, disabled, loading, ...props }) => {
   const style = () => {
     let background =
       "bg-primary-300 hover:bg-primary-200 active:bg-primary-400";
@@ -24,13 +24,13 @@ export const PrimaryButton = ({ title, disabled, ...props }) => {
 
   return (
     <button className={style()} {...props}>
-      <ButtonLoader loading={disabled} />
+      <ButtonLoader loading={loading} />
       <Title inverted>{title}</Title>
     </button>
   );
 };
 
-export const OutlinedButton = ({ title, disabled, ...props }) => {
+export const OutlinedButton = ({ title, disabled, loading, ...props }) => {
   const style = () => {
     const focus = "focus:ring-2 focus:ring-primary-100 outline-none";
     let background = "border border-primary-300 hover:bg-neutral-100";
@@ -39,7 +39,7 @@ export const OutlinedButton = ({ title, disabled, ...props }) => {
 
   return (
     <button className={style()} type="ghost" {...props}>
-      <ButtonLoader loading={disabled} />
+      <ButtonLoader loading={loading} />
       <Title inverted color="text-primary-300">
         {title}
       </Title>
@@ -47,7 +47,7 @@ export const OutlinedButton = ({ title, disabled, ...props }) => {
   );
 };
 
-export const TertiaryButton = ({ title, disabled, ...props }) => {
+export const TertiaryButton = ({ title, disabled, loading, ...props }) => {
   const style = () => {
     const focus = "focus:ring-2 focus:ring-neutral-600 outline-none";
     let background = "border border-blackText-300 hover:bg-neutral-100";
@@ -56,12 +56,12 @@ export const TertiaryButton = ({ title, disabled, ...props }) => {
 
   return (
     <button className={style()} {...props}>
-      <ButtonLoader loading={disabled} />
+      <ButtonLoader loading={loading} />
       <Title>{title}</Title>
     </button>
   );
 };
-export const DangerButton = ({ title, disabled, ...props }) => {
+export const DangerButton = ({ title, disabled, loading, ...props }) => {
   const style = () => {
     let background = "bg-rose-600 hover:bg-rose-500 active:bg-rose-700";
     const focus = "focus:ring-2 focus:ring-rose-400 outline-none";
@@ -70,7 +70,7 @@ export const DangerButton = ({ title, disabled, ...props }) => {
 
   return (
     <button className={style()} {...props}>
-      <ButtonLoader loading={disabled} />
+      <ButtonLoader loading={loading} />
       <Title inverted>{title}</Title>
     </button>
   );

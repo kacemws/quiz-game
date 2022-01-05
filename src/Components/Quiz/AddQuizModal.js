@@ -374,6 +374,7 @@ const Recap = ({ setStep, data, onClose }) => {
         <TertiaryButton
           title="Précédent"
           disabled={loading}
+          loading={loading}
           onClick={(_) => {
             setStep(2);
           }}
@@ -383,6 +384,7 @@ const Recap = ({ setStep, data, onClose }) => {
             <OutlinedButton
               title="Sauvegarder"
               disabled={loading}
+              loading={loading}
               onClick={async (_) => {
                 try {
                   setLoading(true);
@@ -403,6 +405,7 @@ const Recap = ({ setStep, data, onClose }) => {
           <PrimaryButton
             title="Publier"
             disabled={loading}
+            loading={loading}
             onClick={async (_) => {
               try {
                 setLoading(true);

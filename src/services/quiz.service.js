@@ -181,9 +181,9 @@ export const getPaginatedPublishedQuizzes = async (page = 1, size = 10) => {
   }
 };
 
-export const getAllQuizzes = async (page = 1, size = 10) => {
+export const getAllQuizzes = async (filter = "", page = 1, size = 10) => {
   try {
-    const { data: resp } = await getFilteredQuizzes("", page, size);
+    const { data: resp } = await getFilteredQuizzes(filter, page, size);
     return (
       resp || {
         items: [],
