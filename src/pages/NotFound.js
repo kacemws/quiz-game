@@ -7,7 +7,7 @@ const Wrapper = ({ children }) => {
 export const NotFound = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex-1 w-ful flex flex-col md:flex-row items-center justify-center">
+    <div className="flex-1 w-full flex flex-col md:flex-row items-center justify-center">
       <img
         src={illustration}
         alt="ressource not found"
