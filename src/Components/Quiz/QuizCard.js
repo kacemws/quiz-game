@@ -17,7 +17,9 @@ export const QuizCard = ({ quiz, list = true, ...props }) => {
           ease: "easeIn",
         },
       }}
-      className={`flex flex-col justify-center items-center h-full w-64 min-w-[16rem] bg-primary-300 ${
+      className={`flex flex-col justify-center items-center h-full min-w-[${
+        list ? "16rem" : "12rem"
+      }] bg-primary-300 ${
         list ? "mx-4" : ""
       } first:ml-0 last:mr-0 rounded-lg shadow-sm active:cursor-grabbing`}
     >
