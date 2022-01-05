@@ -31,8 +31,6 @@ export const Home = ({ ...props }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setStates([]);
-    setTypes([]);
     getStatuses().then(({ data }) => {
       const states = Object.keys(data).map((label) => {
         return {
