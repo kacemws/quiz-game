@@ -1,47 +1,51 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { statesAtom, typesAtom, difficultiesAtom, quizzesAtom } from "../data";
-import { getStatuses, getTypes, getDifficulties } from "../api";
-import {
-  AddQuizModal,
-  HomeDescription,
-  HomeImage,
-  Loader,
-  OutlinedButton,
-  PageTitle,
-  QuizSample,
-} from "../Components";
-import ready from "../assets/images/illustrations/ready.png";
-import topOfBooks from "../assets/images/illustrations/top-of-books.png";
-import universe from "../assets/images/illustrations/universe.png";
-import topStripe from "../assets/images/shapes/centred-shape.svg";
-import bottomStripes from "../assets/images/shapes/bottom-stripes.svg";
-import circle from "../assets/images/shapes/half-circle.svg";
-import bottom from "../assets/images/shapes/bottom.svg";
-import { getPaginatedPublishedQuizzes } from "../services";
+// import { getStatuses, getTypes, getDifficulties } from "../api";
+import { Loader, QuizCard } from "../Components";
+import { getAllQuizzes } from "../services";
 
 export const Quizzes = ({ ...props }) => {
-  const navigate = useNavigate();
-  const [states] = useAtom(statesAtom);
-  const [types] = useAtom(typesAtom);
-  const [difficulties] = useAtom(difficultiesAtom);
+  //   const [states] = useAtom(statesAtom);
+  //   const [types] = useAtom(typesAtom);
+  //   const [difficulties] = useAtom(difficultiesAtom);
   const [quizzes, setQuizzes] = useAtom(quizzesAtom);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [innerLoading, setInnerLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  //   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setLoading(false);
-  }, [setQuizzes]);
+    getAllQuizzes(page, 10).then((resp) => {
+      console.log({ resp });
+      setQuizzes(resp);
+      setLoading(false);
+      setInnerLoading(false);
+    });
+  }, [page, setLoading, setInnerLoading, setQuizzes]);
   return (
     <>
       {loading ? (
         <Loader fullScreen />
       ) : (
-        <div className="min-h-full w-full overflow-x-hidden"></div>
+        <div className="min-h-full w-full overflow-x-hidden">
+          {quizzes?.length === 0 ? (
+            <>Empty State</>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+              {quizzes.items.map((quiz) => {
+                return (
+                  <div key={quiz.id} className="h-64">
+                    <QuizCard quiz={quiz} list={false} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       )}
-      )
-      <AddQuizModal open={open} setOpen={setOpen} />
+      ){/* <Update open={open} setOpen={setOpen} />s */}
     </>
   );
 };

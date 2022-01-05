@@ -1,4 +1,4 @@
-import { addQuiz, putQuiz, getPublishedQuizzes } from "../api";
+import { addQuiz, putQuiz, getFilteredQuizzes } from "../api";
 export function makeid(length) {
   var result = "";
   var characters =
@@ -169,7 +169,21 @@ export const removeProposition = (
 
 export const getPaginatedPublishedQuizzes = async (page = 1, size = 10) => {
   try {
-    const { data: resp } = await getPublishedQuizzes(page, size);
+    const { data: resp } = await getFilteredQuizzes(1, page, size);
+    return (
+      resp || {
+        items: [],
+        count: 0,
+      }
+    );
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+};
+
+export const getAllQuizzes = async (page = 1, size = 10) => {
+  try {
+    const { data: resp } = await getFilteredQuizzes("", page, size);
     return (
       resp || {
         items: [],

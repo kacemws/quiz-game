@@ -16,9 +16,11 @@ export const putQuiz = async (id, data) => {
   }
 };
 
-export const getPublishedQuizzes = async (page = 1, size = 10) => {
+export const getFilteredQuizzes = async (filter = "", page = 1, size = 10) => {
   try {
-    return await axios.get(`/quizzes?type=1&page=${page}&size=${size}`);
+    return await axios.get(
+      `/quizzes?${filter ? "type=" + filter : ""}&page=${page}&size=${size}`
+    );
   } catch (error) {
     throw new Error(error?.response?.data);
   }
