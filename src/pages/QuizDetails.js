@@ -12,6 +12,9 @@ import {
 } from "../Components";
 
 import illustration from "../assets/images/illustrations/prepare.svg";
+import playIllustration from "../assets/images/illustrations/played.png";
+import rateIllustration from "../assets/images/illustrations/rated.png";
+import difficultyIllustration from "../assets/images/illustrations/difficulty.png";
 
 export const QuizDetails = () => {
   const { id } = useParams();
@@ -58,22 +61,42 @@ export const QuizDetails = () => {
           <PageTitle>Bon à savoir !</PageTitle>
           <div className="my-6 w-full grid grid-cols-1 sm:grid-cols-3 gap-4 justify-items-center">
             <div className="flex flex-col items-center">
+              <img
+                src={playIllustration}
+                alt="played x times"
+                className="h-28 my-2"
+              />
               <Heading>Ce quiz a été joué</Heading>
               <div className="h-4" />
               <Body>{quiz?.numberOfPlays} fois</Body>
             </div>
             <div className="flex flex-col items-center">
+              <img
+                src={rateIllustration}
+                alt="is rated"
+                className="h-28 my-2"
+              />
               <Heading>Ce quiz a reçu une note de</Heading>
               <div className="h-4" />
               <Body>{quiz?.rating / (quiz?.numberofVotes ?? 1)}</Body>
             </div>
             <div className="flex flex-col items-center">
+              <img
+                src={difficultyIllustration}
+                alt="level is"
+                className="h-28 my-2"
+              />
               <Heading>Ce quiz est considéré</Heading>
               <div className="h-4" />
               <Body>{quiz?.difficulty?.label}</Body>
             </div>
           </div>
-          <OutlinedButton title="Commence à jouer !" />
+          <OutlinedButton
+            title="Commence à jouer !"
+            onClick={(_) => {
+              navigate(`/quizzes/all/${quiz?.id}/play`);
+            }}
+          />
           <div className="h-6" />
         </div>
       )}
