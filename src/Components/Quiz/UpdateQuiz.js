@@ -47,18 +47,14 @@ const ConfirmStep = ({ setStep, data, setData }) => {
         try {
           setLoading(true);
           // verify password, if it matches then proceeed
-          if (formData?.password !== data?.password) {
-            throw new Error("Mot de passe incorrecte");
-          } else {
-            const aux = await getSerialisedQuizById(
-              difficulties,
-              types,
-              data?.id,
-              data?.password
-            );
-            setData(aux);
-            setStep(2);
-          }
+          const aux = await getSerialisedQuizById(
+            difficulties,
+            types,
+            data?.id,
+            data?.password
+          );
+          setData(aux);
+          setStep(2);
         } catch (error) {
           setLoading(false);
           setError("name", {
@@ -79,7 +75,6 @@ const ConfirmStep = ({ setStep, data, setData }) => {
       />
       <Input
         label="Mot de passe"
-        defaultValue={data?.password}
         underText="Protéger votre quiz avec un mot de passe (minimum 6 dont 1 minuscule, 1 majuscule, 1 chiffre)"
         password
         name="password"

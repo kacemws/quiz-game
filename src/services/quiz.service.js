@@ -245,6 +245,9 @@ export const getSerialisedQuizById = async (
       },
     };
   } catch (error) {
+    if (error?.message === "401") {
+      throw new Error("Les mots de passe ne correspondent pas");
+    }
     throw error;
   }
 };
