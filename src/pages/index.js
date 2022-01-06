@@ -3,3 +3,4 @@ export { Home } from "./Home";
 export { NotFound } from "./NotFound";
 export { Quizzes } from "./Quizzes";
 export { QuizDetails } from "./QuizDetails";
+export { Questions } from "./Questions";
