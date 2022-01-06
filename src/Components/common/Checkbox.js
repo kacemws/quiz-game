@@ -1,9 +1,11 @@
 export const Checkbox = ({
   name,
   register = () => {},
+  required = false,
   checked,
   error,
   className,
+  disabled,
 }) => {
   return (
     <input
@@ -15,7 +17,10 @@ export const Checkbox = ({
           ? "focus:border-primary-300 border-gray-300 ring-primary-200"
           : "border-red-500 ring-red-200 focus:border-red-300"
       } ${className}`}
-      {...register(name, {})}
+      {...register(name, {
+        required,
+      })}
+      disabled={disabled}
     />
   );
 };
