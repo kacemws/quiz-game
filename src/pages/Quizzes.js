@@ -69,6 +69,22 @@ export const Quizzes = ({ ...props }) => {
         <Loader fullScreen />
       ) : (
         <div className="min-h-full w-full overflow-x-hidden">
+          <div className="w-full h-16 flex items-center justify-end">
+            <PopoverComponent
+              options={[
+                { label: "Supprimer les filtres", value: "" },
+                ...states,
+              ]}
+              setItem={changeFilter}
+              button={
+                <FilterIcon
+                  className={`h-6 w-6 ${
+                    state === "" ? "text-gray-400" : "text-primary-300"
+                  } cursor-pointer`}
+                />
+              }
+            />
+          </div>
           {quizzes.items.length === 0 ? (
             <>
               <NoContent
@@ -84,22 +100,6 @@ export const Quizzes = ({ ...props }) => {
             </>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="w-full h-16 flex items-center justify-end">
-                <PopoverComponent
-                  options={[
-                    { label: "Supprimer les filtres", value: "" },
-                    ...states,
-                  ]}
-                  setItem={changeFilter}
-                  button={
-                    <FilterIcon
-                      className={`h-6 w-6 ${
-                        state === "" ? "text-gray-400" : "text-primary-300"
-                      } cursor-pointer`}
-                    />
-                  }
-                />
-              </div>
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-stretch">
                 {quizzes.items.map((quiz) => {
                   return (
