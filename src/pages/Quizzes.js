@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { statesAtom, quizzesAtom } from "../data";
-// import { getStatuses, getTypes, getDifficulties } from "../api";
 import {
   Loader,
   NoContent,
   QuizCard,
   AddQuizModal,
+  UpdateQuizModal,
   OutlinedButton,
   PopoverComponent,
 } from "../Components";
@@ -23,7 +23,13 @@ export const Quizzes = ({ ...props }) => {
   const [page, setPage] = useState(1);
   const [state, setState] = useState("");
 
+  // add quiz
   const [open, setOpen] = useState(false);
+
+  // update quiz
+  const [update, setUpdate] = useState(false);
+  // selected quiz
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
 
   useEffect(() => {
     getAllQuizzes("", 1, 10).then((resp) => {
@@ -55,6 +61,8 @@ export const Quizzes = ({ ...props }) => {
     setPage(1);
     setInnerLoading(false);
   };
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -97,7 +105,22 @@ export const Quizzes = ({ ...props }) => {
                 {quizzes.items.map((quiz) => {
                   return (
                     <div key={quiz.id} className="h-64">
-                      <QuizCard quiz={quiz} list={false} />
+                      <QuizCard
+                        quiz={quiz}
+                        list={false}
+                        onClick={(quiz) => {
+                          const stateValue = states.find(
+                            (state) => state.value === quiz?.state
+                          );
+                          if (stateValue.label !== "DRAFT") {
+                            navigate(`/quizzes/all/${quiz?.name}`);
+                          } else {
+                            setSelectedQuiz(quiz);
+                            setUpdate(true);
+                          }
+                          console.log({ quiz });
+                        }}
+                      />
                     </div>
                   );
                 })}
@@ -118,7 +141,7 @@ export const Quizzes = ({ ...props }) => {
           )}
         </div>
       )}
-      {/* <Update open={open} setOpen={setOpen} />s */}
+      <UpdateQuizModal quiz={selectedQuiz} open={update} setOpen={setUpdate} />
     </>
   );
 };

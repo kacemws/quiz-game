@@ -1,4 +1,4 @@
-import { addQuiz, putQuiz, getFilteredQuizzes } from "../api";
+import { addQuiz, putQuiz, getFilteredQuizzes, getQuizById } from "../api";
 export function makeid(length) {
   var result = "";
   var characters =
@@ -39,7 +39,7 @@ export const updateQuiz = async (data, setQuizzes) => {
       throw new Error("Ce quiz n'existe pas");
     }
     console.log({ data });
-    const { data: resp } = await putQuiz(data?.id, {
+    const body = {
       id: data?.id,
       name: data?.name,
       password: data?.password,
@@ -49,23 +49,31 @@ export const updateQuiz = async (data, setQuizzes) => {
       numberOfVotes: data?.numberOfVotes ?? 0,
       numberOfPlays: data?.numberOfPlays ?? 0,
       quizQuestions: {
+        ...data?.quizQuestions,
         quizId: data?.id,
         questions: [
           ...data?.questions.map((question) => {
             return {
+              id: question?.id?.length > 6 ? question?.id : undefined,
+              quizQuestionsId: question?.quizQuestionsId,
               content: question?.question,
               type: question?.type?.value,
-              answers: question.propositions.map(({ content, valid }) => {
-                return {
-                  content,
-                  valid,
-                };
-              }),
+              answers: question.propositions.map(
+                ({ id, questionId, content, valid }) => {
+                  return {
+                    id: id?.length > 4 ? id : undefined,
+                    questionId,
+                    content,
+                    valid,
+                  };
+                }
+              ),
             };
           }),
         ],
       },
-    });
+    };
+    const { data: resp } = await putQuiz(data?.id, body);
     console.log({ resp });
     const quizzes = await getPaginatedPublishedQuizzes(1, 10);
     setQuizzes(quizzes);
@@ -192,5 +200,51 @@ export const getAllQuizzes = async (filter, page = 1, size = 10) => {
     );
   } catch (error) {
     throw new Error(error?.message);
+  }
+};
+
+export const getSerialisedQuizById = async (
+  difficulties,
+  types,
+  id,
+  password = ""
+) => {
+  try {
+    const { data: quiz } = await getQuizById(id, password);
+    console.log({ quiz });
+    return {
+      id: quiz?.id,
+      name: quiz?.name,
+      password: quiz?.password,
+      difficulty: {
+        label: difficulties.find(
+          (difficulty) => difficulty?.value === quiz?.difficulty
+        )?.label,
+        value: quiz?.difficulty,
+      },
+      rating: quiz?.rating ?? 0,
+      numberOfVotes: quiz?.numberOfVotes ?? 0,
+      numberOfPlays: quiz?.numberOfPlays ?? 0,
+      quizQuestions: {
+        id: quiz?.quizQuestions?.id,
+        quizId: quiz?.id,
+        questions: [
+          ...quiz?.quizQuestions?.questions.map((question) => {
+            return {
+              ...question,
+              question: question?.content,
+              propositions: question.answers,
+              type: {
+                label: types.find((type) => type?.value === question?.type)
+                  ?.label,
+                value: question?.type,
+              },
+            };
+          }),
+        ],
+      },
+    };
+  } catch (error) {
+    throw error;
   }
 };

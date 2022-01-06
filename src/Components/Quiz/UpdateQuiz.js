@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAtom } from "jotai";
-import { typesAtom, difficultiesAtom, quizzesAtom } from "../../data";
+import { typesAtom, difficultiesAtom } from "../../data";
 import {
   Modal,
   Input,
@@ -10,21 +10,22 @@ import {
   OutlinedButton,
   Select,
   Checkbox,
-  Recap,
 } from "../";
 import { MinusIcon } from "@heroicons/react/outline";
 
 import {
   makeid,
-  createQuiz,
   addQuestion,
   addProposition,
   removeQuestion,
   removeProposition,
   changeQuestionType,
+  getSerialisedQuizById,
 } from "../../services";
+import { Recap } from ".";
+import { Loader } from "../common";
 
-const InfosStep = ({ setStep, data, setData }) => {
+const ConfirmStep = ({ setStep, data, setData }) => {
   const {
     register,
     handleSubmit,
@@ -38,16 +39,26 @@ const InfosStep = ({ setStep, data, setData }) => {
   }); //form validation
 
   const [loading, setLoading] = useState(false);
-  const [, setQuizzes] = useAtom(quizzesAtom);
+  const [difficulties] = useAtom(difficultiesAtom);
+  const [types] = useAtom(typesAtom);
   return (
     <form
       onSubmit={handleSubmit(async (formData) => {
         try {
           setLoading(true);
-          const aux = { ...data, ...formData };
-          const id = await createQuiz(aux, setQuizzes);
-          setData({ ...aux, id });
-          setStep(2);
+          // verify password, if it matches then proceeed
+          if (formData?.password !== data?.password) {
+            throw new Error("Mot de passe incorrecte");
+          } else {
+            const aux = await getSerialisedQuizById(
+              difficulties,
+              types,
+              data?.id,
+              data?.password
+            );
+            setData(aux);
+            setStep(2);
+          }
         } catch (error) {
           setLoading(false);
           setError("name", {
@@ -104,8 +115,9 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
   } = useForm({ mode: "onChange" }); //form validation
 
   useEffect(() => {
-    if (data.questions) {
-      setQuestions(data.questions);
+    console.log({ data });
+    if (data.quizQuestions.questions) {
+      setQuestions(data.quizQuestions.questions);
     }
   }, [data]);
   const [types] = useAtom(typesAtom);
@@ -355,11 +367,11 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
   );
 };
 
-export const AddQuizModal = ({ open, setOpen }) => {
+export const UpdateQuizModal = ({ quiz, open, setOpen }) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState({});
   const steps = {
-    1: <InfosStep setStep={setStep} data={data} setData={setData} />,
+    1: <ConfirmStep setStep={setStep} data={quiz} setData={setData} />,
     2: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
     3: (
       <Recap
@@ -373,24 +385,36 @@ export const AddQuizModal = ({ open, setOpen }) => {
       />
     ),
   };
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
   return (
     <Modal
       isOpen={open}
       setIsOpen={(_) => {
         setOpen(!open);
       }}
-      title="Créer un quiz"
-      key="add-quiz-modal"
+      title="Modifier le quiz"
+      key="update-quiz-modal"
       onClose={(_) => {
         setStep(1);
         setData({});
       }}
     >
-      <Steps
-        steps={["Informations", "Questions", "Récapitulatif"]}
-        current={step - 1}
-      />
-      {steps[step]}
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Steps
+            steps={["Mot de passe", "Questions", "Récapitulatif"]}
+            current={step - 1}
+          />
+          {steps[step]}
+        </>
+      )}
     </Modal>
   );
 };

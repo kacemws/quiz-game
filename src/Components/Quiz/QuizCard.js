@@ -2,7 +2,12 @@ import { motion } from "framer-motion";
 import { Heading, Subheading } from "..";
 import { StarIcon, ClipboardListIcon } from "@heroicons/react/outline/";
 
-export const QuizCard = ({ quiz, list = true, ...props }) => {
+export const QuizCard = ({
+  quiz,
+  list = true,
+  onClick = (_) => {},
+  ...props
+}) => {
   return (
     <motion.div
       key={quiz.id}
@@ -20,7 +25,8 @@ export const QuizCard = ({ quiz, list = true, ...props }) => {
         list ? "16rem" : "12rem"
       }] bg-primary-300 ${
         list ? "mx-4" : ""
-      } first:ml-0 last:mr-0 rounded-lg shadow-sm active:cursor-grabbing`}
+      } first:ml-0 last:mr-0 rounded-lg shadow-sm hover:cursor-pointer active:cursor-grabbing`}
+      onClick={() => onClick(quiz)}
     >
       <Heading inverted>{quiz?.name}</Heading>
       <div className="my-2 w-full bg-red flex justify-evenly items-center">

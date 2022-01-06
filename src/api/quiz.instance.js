@@ -27,3 +27,11 @@ export const getFilteredQuizzes = async (filter, page = 1, size = 10) => {
     throw new Error(error?.response?.data);
   }
 };
+
+export const getQuizById = async (id, password = "") => {
+  try {
+    return await axios.get(`/quizzes/${id}?password=${password}`);
+  } catch (error) {
+    throw new Error(error?.response?.data);
+  }
+};
