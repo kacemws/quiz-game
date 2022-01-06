@@ -17,6 +17,7 @@ import illustration from "../assets/images/illustrations/prepare.svg";
 import playIllustration from "../assets/images/illustrations/played.png";
 import rateIllustration from "../assets/images/illustrations/rated.png";
 import difficultyIllustration from "../assets/images/illustrations/difficulty.png";
+import { UsernameModal } from "../Components/Quiz/Username";
 
 export const QuizDetails = () => {
   const { id } = useParams();
@@ -41,6 +42,7 @@ export const QuizDetails = () => {
   }, [difficulties, types, id, navigate, setQuiz]);
 
   const [deleteOpen, setDelete] = useState(false);
+  const [usernameOpen, setUsernameOpen] = useState(false);
 
   const deleteModal = (
     <DeleteQuizModal
@@ -49,6 +51,15 @@ export const QuizDetails = () => {
       setOpen={() => {
         setDelete(false);
         navigate("/quizzes/all");
+      }}
+    />
+  );
+  const usernameModal = (
+    <UsernameModal
+      open={usernameOpen}
+      setOpen={() => {
+        setUsernameOpen(false);
+        navigate(`/quizzes/all/${quiz?.id}/play`);
       }}
     />
   );
@@ -109,7 +120,7 @@ export const QuizDetails = () => {
           <OutlinedButton
             title="Commence à jouer !"
             onClick={(_) => {
-              navigate(`/quizzes/all/${quiz?.id}/play`);
+              setUsernameOpen(true);
             }}
           />
           <div className="h-6" />
@@ -127,6 +138,7 @@ export const QuizDetails = () => {
         </div>
       )}
       {deleteModal}
+      {usernameModal}
     </>
   );
 };
