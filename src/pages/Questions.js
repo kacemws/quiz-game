@@ -36,7 +36,7 @@ export const Questions = () => {
         setLoading(false);
       })
       .catch((_) => {
-        navigate(-1);
+        navigate(`/quizzes/all/${id}`);
       });
   }, [difficulties, types, id, navigate, setQuiz]);
 
