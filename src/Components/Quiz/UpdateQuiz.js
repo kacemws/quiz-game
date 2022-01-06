@@ -22,10 +22,10 @@ import {
   changeQuestionType,
   getSerialisedQuizById,
 } from "../../services";
-import { Recap } from ".";
-import { Loader } from "../common";
+import { DeleteQuizModal, Recap } from ".";
+import { DangerButton, Loader } from "../common";
 
-const ConfirmStep = ({ setStep, data, setData }) => {
+const ConfirmStep = ({ setStep, data, setData, onClose }) => {
   const {
     register,
     handleSubmit,
@@ -41,62 +41,95 @@ const ConfirmStep = ({ setStep, data, setData }) => {
   const [loading, setLoading] = useState(false);
   const [difficulties] = useAtom(difficultiesAtom);
   const [types] = useAtom(typesAtom);
+
+  // delete quiz
+  const [deleteOpen, setDelete] = useState(false);
+
+  const deleteModal = (
+    <DeleteQuizModal
+      open={deleteOpen}
+      quiz={data}
+      setOpen={() => {
+        setDelete(false);
+        onClose();
+      }}
+    />
+  );
+
   return (
-    <form
-      onSubmit={handleSubmit(async (formData) => {
-        try {
-          setLoading(true);
-          // verify password, if it matches then proceeed
-          const aux = await getSerialisedQuizById(
-            difficulties,
-            types,
-            data?.id,
-            data?.password
-          );
-          setData(aux);
-          setStep(2);
-        } catch (error) {
-          setLoading(false);
-          setError("name", {
-            message: error?.message,
-            type: "manual",
-          });
-        }
-      })}
-    >
-      <Input
-        label="Nom du quiz"
-        name="name"
-        defaultValue={data?.name}
-        disabled={data?.name}
-        error={errors?.name ? errors?.name?.message || "obligatoire" : ""}
-        register={register}
-        required
-      />
-      <Input
-        label="Mot de passe"
-        underText="Protéger votre quiz avec un mot de passe (minimum 6 dont 1 minuscule, 1 majuscule, 1 chiffre)"
-        password
-        name="password"
-        type="password"
-        error={
-          errors?.password?.type === "required"
-            ? "obligatoire"
-            : errors?.password?.type === "minLength"
-            ? "Taille non respéctée"
-            : errors?.password?.type === "pattern"
-            ? "Consignes non respectées"
-            : ""
-        }
-        register={register}
-        minLength={6}
-        pattern={/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&-+]{6,}$/}
-        required
-      />
-      <div className="w-full flex justify-end">
-        <OutlinedButton title="Suivant" type="primary" disabled={loading} />
-      </div>
-    </form>
+    <>
+      <form
+        onSubmit={handleSubmit(async (formData) => {
+          try {
+            setLoading(true);
+            // verify password, if it matches then proceeed
+            const aux = await getSerialisedQuizById(
+              difficulties,
+              types,
+              data?.id,
+              formData?.password
+            );
+            setData(aux);
+            setStep(2);
+          } catch (error) {
+            setLoading(false);
+            setError("name", {
+              message: error?.message,
+              type: "manual",
+            });
+          }
+        })}
+      >
+        <Input
+          label="Nom du quiz"
+          name="name"
+          defaultValue={data?.name}
+          disabled={data?.name}
+          error={errors?.name ? errors?.name?.message || "obligatoire" : ""}
+          register={register}
+          required
+        />
+        <Input
+          label="Mot de passe"
+          underText="Protéger votre quiz avec un mot de passe (minimum 6 dont 1 minuscule, 1 majuscule, 1 chiffre)"
+          password
+          name="password"
+          type="password"
+          error={
+            errors?.password?.type === "required"
+              ? "obligatoire"
+              : errors?.password?.type === "minLength"
+              ? "Taille non respéctée"
+              : errors?.password?.type === "pattern"
+              ? "Consignes non respectées"
+              : ""
+          }
+          register={register}
+          minLength={6}
+          pattern={/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&-+]{6,}$/}
+          required
+        />
+        <div className="w-full flex justify-between">
+          <DangerButton
+            title="Supprimer"
+            type="button"
+            onClick={(_) => {
+              setDelete(true);
+            }}
+            disabled={loading}
+            loading={loading}
+          />
+
+          <OutlinedButton
+            title="Suivant"
+            type="primary"
+            disabled={loading}
+            loading={loading}
+          />
+        </div>
+      </form>
+      {deleteModal}
+    </>
   );
 };
 
@@ -365,7 +398,18 @@ export const UpdateQuizModal = ({ quiz, open, setOpen }) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState({});
   const steps = {
-    1: <ConfirmStep setStep={setStep} data={quiz} setData={setData} />,
+    1: (
+      <ConfirmStep
+        setStep={setStep}
+        data={quiz}
+        setData={setData}
+        onClose={() => {
+          setOpen(false);
+          setStep(1);
+          setData({});
+        }}
+      />
+    ),
     2: <QuestionsQuiz setStep={setStep} data={data} setData={setData} />,
     3: (
       <Recap

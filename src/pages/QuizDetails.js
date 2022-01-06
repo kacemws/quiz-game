@@ -5,10 +5,12 @@ import { typesAtom, difficultiesAtom } from "../data";
 import { getSerialisedQuizById } from "../services";
 import {
   Body,
+  DeleteQuizModal,
   Heading,
   Loader,
   OutlinedButton,
   PageTitle,
+  Subheading,
 } from "../Components";
 
 import illustration from "../assets/images/illustrations/prepare.svg";
@@ -37,6 +39,19 @@ export const QuizDetails = () => {
         navigate(-1);
       });
   }, [difficulties, types, id, navigate, setQuiz]);
+
+  const [deleteOpen, setDelete] = useState(false);
+
+  const deleteModal = (
+    <DeleteQuizModal
+      open={deleteOpen}
+      quiz={quiz}
+      setOpen={() => {
+        setDelete(false);
+        navigate("/quizzes/all");
+      }}
+    />
+  );
 
   return (
     <>
@@ -98,8 +113,20 @@ export const QuizDetails = () => {
             }}
           />
           <div className="h-6" />
+          <Subheading>
+            Ou{" "}
+            <span
+              className="text-xs text-red-500 hover:cursor-pointer"
+              onClick={(_) => {
+                setDelete(true);
+              }}
+            >
+              Supprime le
+            </span>
+          </Subheading>
         </div>
       )}
+      {deleteModal}
     </>
   );
 };

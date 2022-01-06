@@ -1,4 +1,10 @@
-import { addQuiz, putQuiz, getFilteredQuizzes, getQuizById } from "../api";
+import {
+  addQuiz,
+  putQuiz,
+  getFilteredQuizzes,
+  getQuizById,
+  deleteQuizById,
+} from "../api";
 export function makeid(length) {
   var result = "";
   var characters =
@@ -241,6 +247,19 @@ export const getSerialisedQuizById = async (
         ],
       },
     };
+  } catch (error) {
+    if (error?.message === "401") {
+      throw new Error("Les mots de passe ne correspondent pas");
+    }
+    throw error;
+  }
+};
+
+export const deleteQuiz = async (id, password, setQuizzes) => {
+  try {
+    await deleteQuizById(id, password);
+    const quizzes = await getPaginatedPublishedQuizzes(1, 10);
+    setQuizzes(quizzes);
   } catch (error) {
     if (error?.message === "401") {
       throw new Error("Les mots de passe ne correspondent pas");

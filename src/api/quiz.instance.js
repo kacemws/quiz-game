@@ -35,3 +35,11 @@ export const getQuizById = async (id, password = "") => {
     throw new Error(error?.response?.status);
   }
 };
+
+export const deleteQuizById = async (id, password = "") => {
+  try {
+    return await axios.delete(`/quizzes/${id}?password=${password}`);
+  } catch (error) {
+    throw new Error(error?.response?.status);
+  }
+};
