@@ -44,7 +44,6 @@ export const Quizzes = ({ ...props }) => {
     const { items, count } = await getAllQuizzes(state, page + 1, 10);
 
     const aux = Array.from(new Set([...quizzes.items, ...items]));
-    console.log({ aux });
     setQuizzes({
       items: aux,
       count,
@@ -118,7 +117,6 @@ export const Quizzes = ({ ...props }) => {
                             setSelectedQuiz(quiz);
                             setUpdate(true);
                           }
-                          console.log({ quiz });
                         }}
                       />
                     </div>

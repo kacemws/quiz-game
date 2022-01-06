@@ -53,7 +53,6 @@ export const Home = ({ ...props }) => {
             };
           });
           getPaginatedPublishedQuizzes(1, 10).then((resp) => {
-            console.log({ resp });
             setQuizzes(resp);
             setStates(states);
             setTypes(types);

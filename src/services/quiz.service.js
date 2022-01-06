@@ -38,7 +38,6 @@ export const updateQuiz = async (data, setQuizzes) => {
     if (!data?.id) {
       throw new Error("Ce quiz n'existe pas");
     }
-    console.log({ data });
     const body = {
       id: data?.id,
       name: data?.name,
@@ -74,7 +73,6 @@ export const updateQuiz = async (data, setQuizzes) => {
       },
     };
     const { data: resp } = await putQuiz(data?.id, body);
-    console.log({ resp });
     const quizzes = await getPaginatedPublishedQuizzes(1, 10);
     setQuizzes(quizzes);
     return resp?.id;
@@ -211,7 +209,6 @@ export const getSerialisedQuizById = async (
 ) => {
   try {
     const { data: quiz } = await getQuizById(id, password);
-    console.log({ quiz });
     return {
       id: quiz?.id,
       name: quiz?.name,

@@ -110,7 +110,6 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
   } = useForm({ mode: "onChange" }); //form validation
 
   useEffect(() => {
-    console.log({ data });
     if (data.quizQuestions.questions) {
       setQuestions(data.quizQuestions.questions);
     }
@@ -137,7 +136,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
     },
   ]);
 
-  console.log({ errors });
+  console.error({ errors });
 
   return (
     <form
@@ -194,7 +193,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
               type: "options",
             });
           }
-          console.log({ error });
+          console.error({ error });
         }
       })}
     >

@@ -130,7 +130,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
     },
   ]);
 
-  console.log({ errors });
+  console.error({ errors });
 
   return (
     <form
@@ -187,7 +187,7 @@ const QuestionsQuiz = ({ setStep, data, setData }) => {
               type: "options",
             });
           }
-          console.log({ error });
+          console.error({ error });
         }
       })}
     >

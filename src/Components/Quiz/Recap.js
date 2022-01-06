@@ -41,7 +41,7 @@ export const Recap = ({ setStep, data, onClose }) => {
                   );
                   onClose();
                 } catch (error) {
-                  console.log({ error });
+                  console.error({ error });
                 }
               }}
             />
@@ -62,7 +62,7 @@ export const Recap = ({ setStep, data, onClose }) => {
                 );
                 onClose();
               } catch (error) {
-                console.log({ error });
+                console.error({ error });
               }
             }}
           />
