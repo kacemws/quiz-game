@@ -113,7 +113,7 @@ export const Quizzes = ({ ...props }) => {
                             (state) => state.value === quiz?.state
                           );
                           if (stateValue.label !== "DRAFT") {
-                            navigate(`/quizzes/all/${quiz?.name}`);
+                            navigate(`/quizzes/all/${quiz?.id}`);
                           } else {
                             setSelectedQuiz(quiz);
                             setUpdate(true);

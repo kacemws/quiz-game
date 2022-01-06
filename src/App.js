@@ -1,4 +1,4 @@
-import { Layout, Home, Quizzes, NotFound } from "./pages";
+import { Layout, Home, Quizzes, NotFound, QuizDetails } from "./pages";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -8,14 +8,15 @@ function App() {
           {/*
            * Home (done)
            * All Quizzes (Grid view ----> done)
-           * Quiz By ID (description and infos) if quiz is still draft, navigate again to all *******
-           * Quiz By ID (questions and answers)
+           * Quiz By ID (description and infos) if quiz is still draft, navigate again to all (done)
+           * Quiz By ID (questions and answers) ************************************
            * Creation is just a modal (done)
-           * update is just a modal (TODO) ************************************
+           * update is just a modal (done)
            * 404 page (done)
            */}
           <Route path="/" element={<Home />} />
           <Route path="/quizzes/all" element={<Quizzes />} />
+          <Route path="/quizzes/all/:id" element={<QuizDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
