@@ -69,7 +69,7 @@ const ConfirmStep = ({ setStep, data, setData, onClose }) => {
               data?.id,
               formData?.password
             );
-            setData(aux);
+            setData({ ...aux, password: formData?.password });
             setStep(2);
           } catch (error) {
             setLoading(false);
